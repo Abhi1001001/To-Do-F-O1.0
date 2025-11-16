@@ -22,7 +22,7 @@ npm install
 npm run dev
 </pre>
 <p>The app will run at:</p>
-<p><strong>https://to-do-app-min.netlify.app/</strong></p>
+<p><strong>http://localhost:5173</strong></p>
 <hr>
 <h2>API Configuration</h2>
 <p>You can set the backend API URL inside:</p>
