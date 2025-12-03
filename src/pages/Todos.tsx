@@ -23,7 +23,7 @@ export default function Todos() {
   }>();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  // const [editing, setEditing] = useState<Todo | null>(null);
+  const [editing, setEditing] = useState<Todo | null>(null);
 
   const fetchTodos = async () => {
     const res = await client.get("/todos");
@@ -55,8 +55,8 @@ export default function Todos() {
 
   if (!token)
     return (
-      <div className="min-h-screen w-full bg-linear-to-b from-gray-900 to-neutral-900 flex flex-col justify-center items-center p-4 text-3xl font-semibold text-white">
-        Please login to view todos
+      <div className="w-full bg-linear-to-b from-gray-900 to-neutral-900 flex flex-col justify-center items-center p-4 text-3xl font-semibold text-white">
+        Please login to view Tasks
       </div>
     );
 
@@ -66,7 +66,7 @@ export default function Todos() {
         {/* Header */}
         <div className="w-1/2 m-auto">
           <h1 className="md:text-3xl text-2xl font-bold text-center text-white drop-shadow-sm">
-            ✏️ The Minimal To Do List
+            The Minimal Task List
           </h1>
           <p className="text-center text-white/90 ">
             Click the task to mark it completed. Delete tasks with the trash

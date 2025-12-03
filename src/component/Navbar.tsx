@@ -28,11 +28,11 @@ export default function Navbar() {
             {token ? (
               <>
                 <Link
-                  title="List your todos"
+                  title="List your tasks"
                   className="text-white text-base"
                   to="/todos"
                 >
-                  Todos
+                  Tasks
                 </Link>{" "}
                 <button
                   className="bg-white text-red-600 px-5 py-2 rounded-full font-medium shadow hover:bg-gray-100 transition"
