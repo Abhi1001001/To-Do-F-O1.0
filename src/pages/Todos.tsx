@@ -54,8 +54,15 @@ export default function Todos() {
 
   const toggleTodo = useMutation(
     async (id: string) =>
-      client.patch(`/todos/${id}/toggle`).then((r) => r.data),
+    {
+      setLoading(true);
+      client.patch(`/todos/${id}/toggle`).then((r) => {
+        r.data;
+        setLoading(false);
+        Navigate("/");
+      }),
     { onSuccess: () => queryClient.invalidateQueries("todos") }
+    }
   );
 
   if (!token)
