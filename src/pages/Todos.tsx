@@ -1,11 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import client from "../api/client";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import useAuthStore from "../store/auth";
 import { FiEdit2, FiTrash2 } from "react-icons/fi";
 import { useState } from "react";
 import TaskPopup from "../component/TaskPopup";
 import { IoClose } from "react-icons/io5";
+import EditTaskPopup from "../component/EditTaskPopup";
+import { useNavigate } from "react-router-dom";
 
 type Todo = {
   _id: string;
@@ -17,13 +19,15 @@ type Todo = {
 export default function Todos() {
   const queryClient = useQueryClient();
   const { token } = useAuthStore();
-  const { register, reset } = useForm<{
+  const { reset } = useForm<{
     title: string;
     description?: string;
   }>();
-  const [open, setOpen] = useState(false);
+  const [openAddPopup, setOpenAddPopup] = useState(false);
+  const [openEditPopup, setOpenEditPopup] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [editing, setEditing] = useState<Todo | null>(null);
+  const [editing, setEditing] = useState<Todo | null>();
+  const Navigate = useNavigate();
 
   const fetchTodos = async () => {
     const res = await client.get("/todos");
@@ -40,6 +44,7 @@ export default function Todos() {
       client.delete(`/todos/${id}`).then((r) => {
         r.data;
         setLoading(false);
+        Navigate("/");
       });
     },
     {
@@ -129,6 +134,7 @@ export default function Todos() {
                     onClick={() => {
                       setEditing(t);
                       reset({ title: t.title, description: t.description });
+                      setOpenEditPopup(true);
                     }}
                   >
                     <FiEdit2 />
@@ -146,19 +152,32 @@ export default function Todos() {
         )}
         <div className="fixed bottom-6 right-6">
           <button
-            onClick={() => setOpen(true)}
+            onClick={() => setOpenAddPopup(true)}
             className="bg-indigo-500 hover:bg-indigo-600 text-white px-5 py-3 rounded-full shadow-lg text-sm"
           >
             Add Task
           </button>
         </div>
-        {open && (
+        {openAddPopup && (
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center">
             <div className="relative z-10 w-full max-w-xl transform overflow-hidden rounded-2xl bg-linear-to-b from-gray-900 to-neutral-900 p-6 shadow-2xl transition-all duration-200 ease-out">
               <TaskPopup />
               <button
                 className="absolute right-4 top-4 inline-flex h-9 w-9 items-center justify-center rounded-lg border border-transparent bg-neutral-800/40 text-gray-300 transition hover:bg-neutral-800/60 focus:outline-none focus:ring-2 focus:ring-neutral-600"
-                onClick={() => setOpen(false)}
+                onClick={() => setOpenAddPopup(false)}
+              >
+                <IoClose />
+              </button>
+            </div>
+          </div>
+        )}
+        {openEditPopup && (
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center">
+            <div className="relative z-10 w-full max-w-xl transform overflow-hidden rounded-2xl bg-linear-to-b from-gray-900 to-neutral-900 p-6 shadow-2xl transition-all duration-200 ease-out">
+              <EditTaskPopup task={editing} />
+              <button
+                className="absolute right-4 top-4 inline-flex h-9 w-9 items-center justify-center rounded-lg border border-transparent bg-neutral-800/40 text-gray-300 transition hover:bg-neutral-800/60 focus:outline-none focus:ring-2 focus:ring-neutral-600"
+                onClick={() => setOpenEditPopup(false)}
               >
                 <IoClose />
               </button>
