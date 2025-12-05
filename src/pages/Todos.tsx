@@ -43,27 +43,26 @@ export default function Todos() {
       setLoading(true);
       client.delete(`/todos/${id}`).then((r) => {
         r.data;
-        setLoading(false);
         Navigate("/");
+        setLoading(false);
       });
     },
     {
-      onSuccess: () => queryClient.invalidateQueries("todos"),
+      onSuccess: () => {
+        queryClient.invalidateQueries("todos");
+      },
     }
   );
 
-  const toggleTodo = useMutation(
-    async (id: string) =>
-    {
-      setLoading(true);
-      client.patch(`/todos/${id}/toggle`).then((r) => {
-        r.data;
-        setLoading(false);
-        Navigate("/");
-      }),
-    { onSuccess: () => queryClient.invalidateQueries("todos") }
-    }
-  );
+  const toggleTodo = useMutation(async (id: string) => {
+    setLoading(true);
+    client.patch(`/todos/${id}/toggle`).then((r) => {
+      r.data;
+      Navigate("/");
+      setLoading(false);
+    }),
+      { onSuccess: () => queryClient.invalidateQueries("todos") };
+  });
 
   if (!token)
     return (
